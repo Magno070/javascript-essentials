@@ -82,8 +82,11 @@ document
 
     if (isCorrect) {
       document.getElementById("userInput").className = "user-input";
+      document.getElementById("user-input-label").className = "";
     } else {
       document.getElementById("userInput").className = "user-input-error";
+      document.getElementById("user-input-label").className =
+        "user-input-error";
     }
 
     // console.log(actualPhrase);
@@ -96,7 +99,7 @@ function endTest() {
 
   var timeElapsed = (endTime - startTime) / 1000;
   var userTypedText = document.getElementById("userInput").value;
-
+  var totalLength = userTypedText.length;
   var typedWords = userTypedText.split(/\s+/).filter(function (word) {
     return word !== "";
   }).length;
@@ -111,6 +114,7 @@ function endTest() {
   outputDiv.innerHTML =
     `<h2>Typing Test Results:</h2>` +
     `<p>Words Typed: ${typedWords}</p>` +
+    `<p>Characters Typed: ${totalLength}</p>` +
     `<p>Time Elapsed: ${timeElapsed.toFixed(2)} seconds</p>` +
     `<p>Words per minute: ${wpm}</p>`;
 }
