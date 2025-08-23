@@ -13,7 +13,7 @@ function performOperation() {
   function performOperations(a, b) {
     debugger;
     let result = a + b;
-    result = result * a + b;
+    result = result * (a + b);
     result = result - a + b;
     result = result / (a + b);
 

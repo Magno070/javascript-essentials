@@ -35,12 +35,14 @@ let userInput;
 let testText;
 let startTime, endTime;
 let timerInterval;
+let isEnded;
 
 function delay(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 async function startTest() {
+  isEnded = false;
   testText = document.getElementById("inputText").value = "3...";
   await delay(1000);
   testText = document.getElementById("inputText").value = "2...";
@@ -69,54 +71,50 @@ async function startTest() {
 }
 
 // ~ ////////////////////////////////////////////////////////////////////////////// Listener
-document
-  .getElementById("userInput")
-  .addEventListener("keyup", function (event) {
-    if (event.key === "Enter") {
-      endTest();
-    }
+document.getElementById("userInput").addEventListener("keyup", function () {
+  let typed = userInput.value;
+  let actualPhrase = testText.substring(0, typed.length);
+  let isCorrect = actualPhrase === typed;
 
-    let typed = userInput.value;
-    let actualPhrase = testText.substring(0, typed.length);
-    let isCorrect = actualPhrase === typed;
-
-    if (isCorrect) {
-      document.getElementById("userInput").className = "user-input";
-      document.getElementById("user-input-label").className = "";
-    } else {
-      document.getElementById("userInput").className = "user-input-error";
-      document.getElementById("user-input-label").className =
-        "user-input-error";
-    }
-
-    // console.log(actualPhrase);
-    // console.log(typed);
-  });
-
-function endTest() {
-  endTime = new Date().getTime();
-  clearInterval(timerInterval); // Para o cronômetro
-
-  var timeElapsed = (endTime - startTime) / 1000;
-  var userTypedText = document.getElementById("userInput").value;
-  var totalLength = userTypedText.length;
-  var typedWords = userTypedText.split(/\s+/).filter(function (word) {
-    return word !== "";
-  }).length;
-
-  var wpm = 0;
-
-  if (timeElapsed !== 0 && !isNaN(typedWords)) {
-    wpm = Math.round((typedWords / timeElapsed) * 60);
+  if (isCorrect) {
+    document.getElementById("userInput").className = "user-input";
+    document.getElementById("user-input-label").className = "";
+  } else {
+    document.getElementById("userInput").className = "user-input-error";
+    document.getElementById("user-input-label").className = "user-input-error";
   }
 
-  var outputDiv = document.getElementById("output");
-  outputDiv.innerHTML =
-    `<h2>Typing Test Results:</h2>` +
-    `<p>Words Typed: ${typedWords}</p>` +
-    `<p>Characters Typed: ${totalLength}</p>` +
-    `<p>Time Elapsed: ${timeElapsed.toFixed(2)} seconds</p>` +
-    `<p>Words per minute: ${wpm}</p>`;
+  // console.log(actualPhrase);
+  // console.log(typed);
+});
+
+function endTest() {
+  if (isEnded == false) {
+    endTime = new Date().getTime();
+    clearInterval(timerInterval); // Para o cronômetro
+
+    var timeElapsed = (endTime - startTime) / 1000;
+    var userTypedText = document.getElementById("userInput").value;
+    var totalLength = userTypedText.length;
+    var typedWords = userTypedText.split(/\s+/).filter(function (word) {
+      return word !== "";
+    }).length;
+
+    var wpm = 0;
+
+    if (timeElapsed !== 0 && !isNaN(typedWords)) {
+      wpm = Math.round((typedWords / timeElapsed) * 60);
+    }
+
+    var outputDiv = document.getElementById("output");
+    outputDiv.innerHTML =
+      `<h2>Typing Test Results:</h2>` +
+      `<p>Words Typed: ${typedWords}</p>` +
+      `<p>Characters Typed: ${totalLength}</p>` +
+      `<p>Time Elapsed: ${timeElapsed.toFixed(2)} seconds</p>` +
+      `<p>Words per minute: ${wpm}</p>`;
+  }
+  isEnded = true;
 }
 
 document
